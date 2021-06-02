@@ -1,3 +1,7 @@
+data "template_file" "buildspec" {
+  template = file("${path.module}/buildspec.yml")
+}
+
 resource "aws_codebuild_project" "apply_terraform" {
   name          = "apply-terraform"
   description   = "applies terraform in deployment account"
@@ -24,7 +28,8 @@ resource "aws_codebuild_project" "apply_terraform" {
   }
 
   source {
-    type = "CODEPIPELINE"
+    buildspec = data.template_file.buildspec.rendered
+    type      = "CODEPIPELINE"
   }
 
 }
