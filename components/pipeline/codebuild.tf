@@ -65,6 +65,16 @@ resource "aws_iam_role_policy" "codebuild" {
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject*"
+      ],
+      "Resource": [
+        "${aws_s3_bucket.codepipeline_bucket.arn}",
+        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+      ]
     }
   ]
 }
