@@ -16,6 +16,13 @@ resource "aws_codebuild_project" "apply_terraform" {
     image_pull_credentials_type = "CODEBUILD"
   }
 
+  logs_config {
+    cloudwatch_logs {
+      group_name  = "log-group"
+      stream_name = "log-stream"
+    }
+  }
+
   source {
     type = "CODEPIPELINE"
   }
@@ -39,4 +46,27 @@ resource "aws_iam_role" "codebuild" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy" "codebuild" {
+  role = aws_iam_role.codebuild.name
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    }
+  ]
+}
+POLICY
 }
