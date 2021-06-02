@@ -1,5 +1,5 @@
-resource "aws_codepipeline" "application_infra" {
-  name     = "application-infra-pipeline"
+resource "aws_codepipeline" "web_application" {
+  name     = "web-application-pipeline"
   role_arn = aws_iam_role.codepipeline.arn
 
   artifact_store {
@@ -18,7 +18,7 @@ resource "aws_codepipeline" "application_infra" {
       output_artifacts = ["source_output"]
       configuration = {
         ConnectionArn    = aws_codestarconnections_connection.provider.arn
-        FullRepositoryId = "tintulip/application-infra"
+        FullRepositoryId = "tintulip/web-application"
         BranchName       = "main"
         DetectChanges    = false
       }

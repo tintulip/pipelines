@@ -1,5 +1,5 @@
 module "internet_vpc" {
-  source = "../../module-template/internet-vpc"
+  source = "../../components/internet-vpc"
 
   vpc_name   = "builder-pipeline"
   aws_region = "eu-west-2"

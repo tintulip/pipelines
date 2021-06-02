@@ -5,7 +5,7 @@ locals {
 data "aws_caller_identity" "builder" {}
 
 module "state_bucket" {
-  source      = "../../module-template/remote-state-bucket"
+  source      = "../../components/remote-state-bucket"
   bucket_name = "cla-${local.environment}-state"
 }
 
