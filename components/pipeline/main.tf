@@ -1,9 +1,9 @@
-resource "aws_codepipeline" "web_application" {
-  name     = "web-application-pipeline"
+resource "aws_codepipeline" "pipeline" {
+  name     = "${var.name}-pipeline"
   role_arn = aws_iam_role.codepipeline.arn
 
   artifact_store {
-    location = aws_s3_bucket.codepipeline_bucket.bucket
+    location = var.artifact_store
     type     = "S3"
   }
 
@@ -17,8 +17,8 @@ resource "aws_codepipeline" "web_application" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.provider.arn
-        FullRepositoryId = "tintulip/web-application"
+        ConnectionArn    = var.codestar_connection_arn
+        FullRepositoryId = var.repository_name
         BranchName       = "main"
         DetectChanges    = false
       }
@@ -35,13 +35,8 @@ resource "aws_codepipeline" "web_application" {
       version         = "1"
       input_artifacts = ["source_output"]
       configuration = {
-        ProjectName = aws_codebuild_project.apply_terraform.name
+        ProjectName = aws_codebuild_project.codebuild.name
       }
     }
   }
-}
-
-resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "cla-pipeline-artifacts"
-  acl    = "private"
 }

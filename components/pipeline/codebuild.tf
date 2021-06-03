@@ -2,8 +2,8 @@ data "template_file" "buildspec" {
   template = file("${path.module}/buildspec.yml")
 }
 
-resource "aws_codebuild_project" "apply_terraform" {
-  name          = "apply-terraform"
+resource "aws_codebuild_project" "codebuild" {
+  name          = "${var.name}-build"
   description   = "applies terraform in deployment account"
   build_timeout = "5"
 
@@ -35,7 +35,7 @@ resource "aws_codebuild_project" "apply_terraform" {
 }
 
 resource "aws_iam_role" "codebuild" {
-  name = "codebuild"
+  name = "${var.name}-codebuild"
 
   assume_role_policy = <<EOF
 {
@@ -77,8 +77,8 @@ resource "aws_iam_role_policy" "codebuild" {
         "s3:GetObject*"
       ],
       "Resource": [
-        "${aws_s3_bucket.codepipeline_bucket.arn}",
-        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+        "${var.bucket_arn}",
+        "${var.bucket_arn}/*"
       ]
     }
   ]

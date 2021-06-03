@@ -16,6 +16,20 @@ module "network" {
   environment = local.environment
 }
 
-module "pipeline" {
-  source = "../../components/pipeline"
+module "infra_pipeline" {
+  source                  = "../../components/pipeline"
+  name                    = "workloads"
+  codestar_connection_arn = aws_codestarconnections_connection.provider.arn
+  repository_name         = "tintulip/workloads"
+  artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
+  bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
+}
+
+module "app_pipeline" {
+  source                  = "../../components/pipeline"
+  name                    = "web-application"
+  codestar_connection_arn = aws_codestarconnections_connection.provider.arn
+  repository_name         = "tintulip/web-application"
+  artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
+  bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
 }

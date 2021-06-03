@@ -1,5 +1,5 @@
 resource "aws_iam_role" "codepipeline" {
-  name = "codepipeline-role"
+  name = "${var.name}-codepipeline-role"
 
   assume_role_policy = <<EOF
 {
@@ -17,7 +17,7 @@ resource "aws_iam_role" "codepipeline" {
 EOF
 }
 resource "aws_iam_role_policy" "codepipeline" {
-  name = "codepipeline-policy"
+  name = "${var.name}-codepipeline-policy"
   role = aws_iam_role.codepipeline.id
 
   policy = <<EOF
@@ -34,8 +34,8 @@ resource "aws_iam_role_policy" "codepipeline" {
         "s3:PutObject"
       ],
       "Resource": [
-        "${aws_s3_bucket.codepipeline_bucket.arn}",
-        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+        "${var.bucket_arn}",
+        "${var.bucket_arn}/*"
       ]
     },
     {
@@ -43,7 +43,7 @@ resource "aws_iam_role_policy" "codepipeline" {
       "Action": [
         "codestar-connections:UseConnection"
       ],
-      "Resource": "${aws_codestarconnections_connection.provider.arn}"
+      "Resource": "${var.codestar_connection_arn}"
     },
     {
       "Effect": "Allow",
