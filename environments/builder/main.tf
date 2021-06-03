@@ -23,6 +23,7 @@ module "infra_pipeline" {
   repository_name         = "tintulip/workloads"
   artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
   bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
+  buildspec_path          = "${path.module}/buildspecs/infra_buildspec.yml"
 }
 
 module "app_pipeline" {
@@ -32,4 +33,5 @@ module "app_pipeline" {
   repository_name         = "tintulip/web-application"
   artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
   bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
+  buildspec_path          = "${path.module}/buildspecs/app_buildspec.yml"
 }

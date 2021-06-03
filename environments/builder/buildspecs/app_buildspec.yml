@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Install App"
+  pre_build:
+    commands:
+      - echo "Pre_build App"
+  build:
+    commands:
+      - echo "build App"
+  post_build:
+    commands:
+      - echo "post_build App"

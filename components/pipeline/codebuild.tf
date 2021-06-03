@@ -1,5 +1,5 @@
 data "template_file" "buildspec" {
-  template = file("${path.module}/buildspec.yml")
+  template = file(var.buildspec_path)
 }
 
 resource "aws_codebuild_project" "codebuild" {

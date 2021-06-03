@@ -3,13 +3,13 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Install phase"
+      - echo "Install Infra"
   pre_build:
     commands:
-      - echo "Pre_build phase"
+      - echo "Pre_build Infra"
   build:
     commands:
-      - echo "build phase"
+      - echo "build Infra"
   post_build:
     commands:
-      - echo "post_build phase"
+      - echo "post_build Infra"

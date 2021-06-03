@@ -17,3 +17,7 @@ variable "artifact_store" {
 variable "bucket_arn" {
   type = string
 }
+
+variable "buildspec_path" {
+  type = string
+}
