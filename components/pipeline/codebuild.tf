@@ -2,6 +2,8 @@ data "template_file" "buildspec" {
   template = file(var.buildspec_path)
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "aws_codebuild_project" "codebuild" {
   name          = "${var.name}-build"
   description   = "applies terraform in deployment account"
@@ -18,6 +20,28 @@ resource "aws_codebuild_project" "codebuild" {
     image                       = "aws/codebuild/standard:5.0"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
+    privileged_mode             = var.privileged_mode
+
+    environment_variable {
+      name  = "AWS_DEFAULT_REGION"
+      value = "eu-west-2"
+    }
+
+    environment_variable {
+      name  = "AWS_ACCOUNT_ID"
+      value = data.aws_caller_identity.current.account_id
+    }
+
+    environment_variable {
+      name  = "IMAGE_REPO_NAME"
+      value = var.name
+    }
+
+    environment_variable {
+      name  = "IMAGE_TAG"
+      value = "latest"
+    }
+
   }
 
   logs_config {

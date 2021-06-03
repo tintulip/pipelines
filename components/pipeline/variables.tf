@@ -21,3 +21,8 @@ variable "bucket_arn" {
 variable "buildspec_path" {
   type = string
 }
+
+variable "privileged_mode" {
+  type    = bool
+  default = false
+}
