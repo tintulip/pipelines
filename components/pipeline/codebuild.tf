@@ -53,35 +53,40 @@ resource "aws_iam_role" "codebuild" {
 EOF
 }
 
+data "aws_iam_policy_document" "codebuild" {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+  statement {
+    actions = [
+      "s3:GetObject*",
+    ]
+
+    resources = [
+      "${var.bucket_arn}",
+      "${var.bucket_arn}/*"
+    ]
+  }
+  statement {
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    resources = [
+      "arn:aws:iam::961889248176:role/infrastructure_pipeline"
+    ]
+  }
+}
+
 resource "aws_iam_role_policy" "codebuild" {
   role = aws_iam_role.codebuild.name
-
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Resource": [
-        "*"
-      ],
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject*"
-      ],
-      "Resource": [
-        "${var.bucket_arn}",
-        "${var.bucket_arn}/*"
-      ]
-    }
-  ]
-}
-POLICY
+  policy = data.aws_iam_policy_document.codebuild.json
 }
