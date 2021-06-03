@@ -108,9 +108,22 @@ data "aws_iam_policy_document" "codebuild" {
       "arn:aws:iam::961889248176:role/infrastructure_pipeline"
     ]
   }
+  statement {
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:GetAuthorizationToken",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart"
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "codebuild" {
-  role = aws_iam_role.codebuild.name
+  role   = aws_iam_role.codebuild.name
   policy = data.aws_iam_policy_document.codebuild.json
 }
