@@ -17,7 +17,7 @@ module "network" {
 }
 
 module "infra_pipeline" {
-  source                  = "../../components/pipeline"
+  source                  = "../../components/infra-pipeline"
   name                    = "workloads"
   codestar_connection_arn = aws_codestarconnections_connection.provider.arn
   repository_name         = "tintulip/workloads"
@@ -27,7 +27,7 @@ module "infra_pipeline" {
 }
 
 module "app_pipeline" {
-  source                  = "../../components/pipeline"
+  source                  = "../../components/app-pipeline"
   name                    = "web-application"
   codestar_connection_arn = aws_codestarconnections_connection.provider.arn
   repository_name         = "tintulip/web-application"
