@@ -28,14 +28,36 @@ resource "aws_codepipeline" "pipeline" {
   stage {
     name = "Build"
     action {
-      name            = "Build"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      version         = "1"
-      input_artifacts = ["source_output"]
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["build"]
       configuration = {
         ProjectName = aws_codebuild_project.codebuild.name
+      }
+    }
+  }
+
+  stage {
+    name     = "PreProd_Deploy"
+    role_arn = "arn:aws:iam::961889248176:role/app_deployer"
+    action {
+      name            = "Deploy to Preprod"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeployToECS"
+      version         = "1"
+      input_artifacts = ["source_output", "build"]
+      configuration = {
+        ApplicationName                = var.name
+        DeploymentGroupName            = var.name
+        TaskDefinitionTemplateArtifact = "build"
+        TaskDefinitionTemplatePath     = "imageDetail.json"
+        AppSpecTemplateArtifact        = "build"
+        AppSpecTemplatePath            = "appspec.yaml"
       }
     }
   }
