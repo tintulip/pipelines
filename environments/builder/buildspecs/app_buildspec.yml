@@ -23,5 +23,7 @@ phases:
       - printf '[{"name":"%s", "imageUri":"%s"}]' $IMAGE_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION > imageDetail.json
       - cat imageDetail.json
 artifacts:
+  discard-paths: yes
   files:
     - imageDetail.json
+    - infra/appspec.yaml
