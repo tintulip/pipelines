@@ -39,6 +39,15 @@ resource "aws_iam_role_policy" "codepipeline" {
       ]
     },
     {
+      "Effect":"Allow",
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::961889248176:role/app_deployer"
+      ]
+    },
+    {
       "Effect": "Allow",
       "Action": [
         "codestar-connections:UseConnection"

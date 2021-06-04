@@ -101,15 +101,6 @@ data "aws_iam_policy_document" "codebuild" {
   }
   statement {
     actions = [
-      "sts:AssumeRole",
-    ]
-
-    resources = [
-      "arn:aws:iam::961889248176:role/infrastructure_pipeline"
-    ]
-  }
-  statement {
-    actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:CompleteLayerUpload",
       "ecr:GetAuthorizationToken",

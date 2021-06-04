@@ -42,10 +42,10 @@ resource "aws_codepipeline" "pipeline" {
   }
 
   stage {
-    name     = "PreProd_Deploy"
-    role_arn = "arn:aws:iam::961889248176:role/app_deployer"
+    name = "PreProd_Deploy"
     action {
-      name            = "Deploy to Preprod"
+      name            = "deploy-to-preprod"
+      #role_arn        = "arn:aws:iam::961889248176:role/app_deployer"
       category        = "Deploy"
       owner           = "AWS"
       provider        = "CodeDeployToECS"
