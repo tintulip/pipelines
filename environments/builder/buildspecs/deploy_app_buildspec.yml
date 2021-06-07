@@ -6,8 +6,8 @@ phases:
       - apt-get update; apt-get install jq
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_BUILDER_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | sudo tee /usr/bin/ecs-deploy
-      - sudo chmod +x /usr/bin/ecs-deploy
+      - curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | tee /usr/bin/ecs-deploy
+      - chmod +x /usr/bin/ecs-deploy
   build:
     commands:
       - echo Deploy started on `date`
@@ -28,8 +28,9 @@ phases:
       - printf '{"imageUri":"%s"}'  $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION > imageDetail.json
       - cat imageDetail.json
       - cat infra/taskdef.json
-      - ecs-deploy -c $IMAGE_REPO_NAME -n $IMAGE_REPO_NAME -i $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION \
-        --aws-instance-profile -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer \
+      - |
+        ecs-deploy --cluster workloads -n $IMAGE_REPO_NAME -i $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION \
+        -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer --run-task \
         --use-latest-task-def --force-new-deployment --copy-task-definition-tags \
         --launch-type FARGATE --platform-version LATEST --network-configuration awsvpc \
         --wait-for-success
