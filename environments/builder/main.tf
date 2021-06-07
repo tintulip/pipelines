@@ -34,6 +34,7 @@ module "app_pipeline" {
   artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
   bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
   buildspec_path          = "${path.module}/buildspecs/app_buildspec.yml"
+  buildspec_deploy_path   = "${path.module}/buildspecs/deploy_app_buildspec.yml"
   privileged_mode         = true
 }
 

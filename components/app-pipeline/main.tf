@@ -43,6 +43,22 @@ resource "aws_codepipeline" "pipeline" {
 
   stage {
     name = "PreProd_Deploy"
+
+    action {
+      name             = "push-preprod-image"
+      role_arn         = "arn:aws:iam::961889248176:role/app_deployer"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      run_order        = 1
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["preprod"]
+      configuration = {
+        ProjectName = aws_codebuild_project
+      }
+    }
+
     action {
       name            = "deploy-to-preprod"
       role_arn        = "arn:aws:iam::961889248176:role/app_deployer"
@@ -50,13 +66,14 @@ resource "aws_codepipeline" "pipeline" {
       owner           = "AWS"
       provider        = "CodeDeployToECS"
       version         = "1"
-      input_artifacts = ["source_output", "build"]
+      run_order       = 2
+      input_artifacts = ["source_output", "preprod"]
       configuration = {
         ApplicationName                = var.name
         DeploymentGroupName            = var.name
-        TaskDefinitionTemplateArtifact = "build"
+        TaskDefinitionTemplateArtifact = "preprod"
         TaskDefinitionTemplatePath     = "imageDetail.json"
-        AppSpecTemplateArtifact        = "build"
+        AppSpecTemplateArtifact        = "preprod"
         AppSpecTemplatePath            = "appspec.yaml"
       }
     }
