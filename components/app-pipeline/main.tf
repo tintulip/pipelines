@@ -66,7 +66,7 @@ resource "aws_codepipeline" "pipeline" {
       provider        = "CodeDeployToECS"
       version         = "1"
       run_order       = 2
-      input_artifacts = ["source_output", "preprod"]
+      input_artifacts = ["preprod"]
       configuration = {
         ApplicationName                = var.name
         DeploymentGroupName            = var.name
