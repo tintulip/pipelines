@@ -66,11 +66,11 @@ resource "aws_codepipeline" "pipeline" {
       provider        = "CodeDeployToECS"
       version         = "1"
       run_order       = 2
-      input_artifacts = ["preprod"]
+      input_artifacts = ["source_output","preprod"]
       configuration = {
         ApplicationName                = var.name
         DeploymentGroupName            = var.name
-        TaskDefinitionTemplateArtifact = "preprod"
+        TaskDefinitionTemplateArtifact = "source_output"
         TaskDefinitionTemplatePath     = "taskdef.json"
         AppSpecTemplateArtifact        = "preprod"
         AppSpecTemplatePath            = "appspec.yaml"
