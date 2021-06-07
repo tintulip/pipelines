@@ -39,6 +39,7 @@ module "app_pipeline" {
 }
 
 module "web_application_ecr" {
-  source = "../../components/ecr"
-  name   = "web-application"
+  source                  = "../../components/ecr"
+  name                    = "web-application"
+  workload_aws_account_id = "961889248176"
 }
