@@ -46,7 +46,6 @@ resource "aws_codepipeline" "pipeline" {
 
     action {
       name             = "push-preprod-image"
-      role_arn         = "arn:aws:iam::961889248176:role/app_deployer"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
