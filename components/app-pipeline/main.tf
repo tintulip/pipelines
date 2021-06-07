@@ -55,7 +55,7 @@ resource "aws_codepipeline" "pipeline" {
       input_artifacts  = ["source_output"]
       output_artifacts = ["preprod"]
       configuration = {
-        ProjectName = aws_codebuild_project
+        ProjectName = aws_codebuild_project.deploy_image.name
       }
     }
 

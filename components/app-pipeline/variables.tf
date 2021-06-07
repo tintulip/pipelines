@@ -22,6 +22,10 @@ variable "buildspec_path" {
   type = string
 }
 
+variable "buildspec_deploy_path" {
+  type = string
+}
+
 variable "privileged_mode" {
   type    = bool
   default = false
