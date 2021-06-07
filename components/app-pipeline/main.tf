@@ -71,7 +71,7 @@ resource "aws_codepipeline" "pipeline" {
         ApplicationName                = var.name
         DeploymentGroupName            = var.name
         TaskDefinitionTemplateArtifact = "preprod"
-        TaskDefinitionTemplatePath     = "imageDetail.json"
+        TaskDefinitionTemplatePath     = "taskdef.json"
         AppSpecTemplateArtifact        = "preprod"
         AppSpecTemplatePath            = "appspec.yaml"
       }

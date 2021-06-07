@@ -27,5 +27,6 @@ phases:
 artifacts:
   discard-paths: yes
   files:
+    - infra/taskdef.json
     - imageDetail.json
     - infra/appspec.yaml
