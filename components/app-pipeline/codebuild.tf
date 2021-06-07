@@ -107,7 +107,9 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:GetAuthorizationToken",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
-      "ecr:UploadLayerPart"
+      "ecr:UploadLayerPart",
+      "ecr:BatchGetImage",
+      "ecr:GetDownloadUrlForLayer"
     ]
     resources = [
       "*"
