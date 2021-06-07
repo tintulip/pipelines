@@ -57,26 +57,5 @@ resource "aws_codepipeline" "pipeline" {
         ProjectName = aws_codebuild_project.deploy_image.name
       }
     }
-
-    action {
-      name            = "deploy-to-preprod"
-      role_arn        = "arn:aws:iam::961889248176:role/app_deployer"
-      category        = "Deploy"
-      owner           = "AWS"
-      provider        = "CodeDeployToECS"
-      version         = "1"
-      run_order       = 2
-      input_artifacts = ["preprod"]
-      configuration = {
-        ApplicationName                = var.name
-        DeploymentGroupName            = var.name
-        TaskDefinitionTemplateArtifact = "preprod"
-        TaskDefinitionTemplatePath     = "taskdef.json"
-        AppSpecTemplateArtifact        = "preprod"
-        AppSpecTemplatePath            = "appspec.yaml"
-        Image1ArtifactName             = var.name
-        Image1ContainerName            = "IMAGE1_NAME"
-      }
-    }
   }
 }
