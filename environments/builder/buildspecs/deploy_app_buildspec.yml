@@ -30,7 +30,7 @@ phases:
       - cat infra/taskdef.json
       - ecs-deploy -c $IMAGE_REPO_NAME -n $IMAGE_REPO_NAME -i $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION \
         --aws-instance-profile -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer \
-        --use-latest-task-def --force-new-deployment \
+        --use-latest-task-def --force-new-deployment --copy-task-definition-tags \
         --launch-type FARGATE --platform-version LATEST --network-configuration awsvpc \
         --wait-for-success
 artifacts:
