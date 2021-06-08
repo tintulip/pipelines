@@ -4,7 +4,7 @@ data "template_file" "buildspec_deploy" {
 resource "aws_codebuild_project" "deploy_image" {
   name          = "${var.name}-deploy"
   description   = "deploys ecr image cross account"
-  build_timeout = "5"
+  build_timeout = "15"
 
   service_role = aws_iam_role.codebuild.arn
 
