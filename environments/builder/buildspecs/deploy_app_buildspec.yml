@@ -29,4 +29,4 @@ phases:
         -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer --run-task \
         --use-latest-task-def --force-new-deployment --copy-task-definition-tags \
         --launch-type FARGATE --platform-version LATEST --network-configuration awsvpc \
-        --wait-for-success
+        --wait-for-success --timeout 600
