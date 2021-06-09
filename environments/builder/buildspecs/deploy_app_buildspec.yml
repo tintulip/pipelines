@@ -29,4 +29,4 @@ phases:
         -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer --run-task \
         --use-latest-task-def --force-new-deployment --enable-rollback \
         --launch-type FARGATE --platform-version LATEST --network-configuration awsvpc \
-        --wait-for-success --timeout 600
+        --wait-for-success --timeout 600 -e CODEBUILD_RESOLVED_SOURCE_VERSION
