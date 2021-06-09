@@ -27,6 +27,6 @@ phases:
       - |
         ecs-deploy --cluster workloads -n $IMAGE_REPO_NAME -i $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION \
         -a arn:aws:iam::$AWS_ACCOUNT_ID:role/app_deployer --run-task \
-        --use-latest-task-def --force-new-deployment --copy-task-definition-tags \
+        --use-latest-task-def --force-new-deployment --enable-rollback \
         --launch-type FARGATE --platform-version LATEST --network-configuration awsvpc \
         --wait-for-success --timeout 600
