@@ -7,7 +7,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_codebuild_project" "codebuild" {
   name          = "${var.name}-build"
   description   = "applies terraform in deployment account"
-  build_timeout = "5"
+  build_timeout = "10"
 
   service_role = aws_iam_role.codebuild.arn
 
