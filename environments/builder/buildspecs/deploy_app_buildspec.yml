@@ -6,7 +6,7 @@ phases:
       - apt-get update; apt-get install jq
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_BUILDER_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-deploy | tee /usr/bin/ecs-deploy
+      - curl https://raw.githubusercontent.com/silinternational/ecs-deploy/3.10.0/ecs-deploy | tee /usr/bin/ecs-deploy
       - chmod +x /usr/bin/ecs-deploy
   build:
     commands:
