@@ -3,8 +3,8 @@ version: 0.2
 phases:
   install:
     commands:
-      - wget -nv https://releases.hashicorp.com/terraform/0.15.4/terraform_0.15.4_linux_amd64.zip
-      - unzip terraform_0.15.4_linux_amd64.zip
+      - wget -nv https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip
+      - unzip terraform_1.0.0_linux_amd64.zip
       # FIXME: add shasum check for tf binary!!
   pre_build:
     commands:
