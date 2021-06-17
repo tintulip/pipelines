@@ -6,6 +6,8 @@ phases:
       - wget -nv https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip
       - unzip terraform_1.0.0_linux_amd64.zip
       # FIXME: add shasum check for tf binary!!
+      - wget -nv https://github.com/open-policy-agent/conftest/releases/download/v0.24.0/conftest_0.24.0_Linux_x86_64.tar.gz
+      - tar xzf conftest_0.24.0_Linux_x86_64.tar.gz
   pre_build:
     commands:
       - ./terraform -chdir=environments/preproduction init
@@ -13,6 +15,8 @@ phases:
     commands:
       - ./terraform -chdir=environments/preproduction plan -no-color -out=preproduction.tfplan
       - ./terraform -chdir=environments/preproduction show -no-color preproduction.tfplan
+      - ./terraform -chdir=environments/preproduction show -json -no-color preproduction.tfplan > preproduction.json
+      #- ./conftest test -p exceptions --update "git::https://github.com/cigna/confectionery.git//rules/terraform?ref=v1.0.0" preproduction.json
       - ./terraform -chdir=environments/preproduction apply -no-color -auto-approve -input=false preproduction.tfplan
   post_build:
     commands:
