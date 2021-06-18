@@ -23,6 +23,20 @@ resource "aws_codepipeline" "pipeline" {
         DetectChanges    = false
       }
     }
+    action {
+      name             = "Policies"
+      category         = "Source"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
+      version          = "1"
+      output_artifacts = ["policies"]
+      configuration = {
+        ConnectionArn    = var.codestar_connection_arn
+        FullRepositoryId = "tintulip/policies-as-code"
+        BranchName       = "main"
+        DetectChanges    = false
+      }
+    }
   }
 
   stage {
@@ -33,7 +47,7 @@ resource "aws_codepipeline" "pipeline" {
       owner           = "AWS"
       provider        = "CodeBuild"
       version         = "1"
-      input_artifacts = ["source_output"]
+      input_artifacts = ["source_output", "policies"]
       configuration = {
         ProjectName = aws_codebuild_project.codebuild.name
       }
