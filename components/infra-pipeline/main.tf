@@ -49,7 +49,8 @@ resource "aws_codepipeline" "pipeline" {
       version         = "1"
       input_artifacts = ["source_output", "policies"]
       configuration = {
-        ProjectName = aws_codebuild_project.codebuild.name
+        ProjectName   = aws_codebuild_project.codebuild.name
+        PrimarySource = "source_output"
       }
     }
   }
