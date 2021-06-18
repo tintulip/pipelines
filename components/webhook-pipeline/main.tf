@@ -21,7 +21,6 @@ resource "aws_codepipeline" "pipeline" {
         FullRepositoryId     = var.repository_name
         BranchName           = "main"
         DetectChanges        = false
-        # PollForSourceChanges = false
       }
     }
   }
@@ -42,16 +41,4 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
-}
-
-resource "aws_codepipeline_webhook" "webhook" {
-  name            = "${var.name}-webhook"
-  authentication  = "UNAUTHENTICATED"
-  target_action   = "Source"
-  target_pipeline = aws_codepipeline.pipeline.name
-
-  filter {
-    json_path    = "$.ref"
-    match_equals = "refs/heads/{BranchName}"
-  }
 }
