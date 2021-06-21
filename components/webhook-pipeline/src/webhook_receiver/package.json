@@ -4,7 +4,7 @@
   "description": "Lambda to receive GH webhooks and trigger deployment pipelines in response",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,10 @@
   },
   "homepage": "https://github.com/tintulip/pipelines#readme",
   "dependencies": {
-    "aws-sdk": "^2.931.0",
-    "octokit": "^1.0.6"
+    "@octokit/webhooks": "^9.8.2",
+    "aws-sdk": "^2.931.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.4"
   }
 }

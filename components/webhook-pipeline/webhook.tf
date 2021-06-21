@@ -47,6 +47,25 @@ resource "aws_cloudwatch_log_group" "logs" {
   name = "${var.name}-pipeline-webhook-logs"
 }
 
+resource "random_password" "webhook_github_secret" {
+  length  = 16
+  special = false
+}
+
+resource "aws_kms_key" "webhook_secret" {
+  description             = "KMS key for webhook github secret"
+  deletion_window_in_days = 10
+  enable_key_rotation     = true
+}
+
+resource "aws_ssm_parameter" "webhook_secret" {
+  name  = "webhook_secret"
+  type  = "SecureString"
+  key_id = aws_kms_key.webhook_secret.id
+  value = random_password.webhook_github_secret.result
+}
+
+
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 2.0"
@@ -56,6 +75,9 @@ module "lambda_function" {
   handler       = "index.handler"
   runtime       = "nodejs14.x"
   publish       = true
+  environment_variables = {
+    GITHUB_SECRET = "TO_CHANGE" 
+  }
 
   source_path = [{
     path     = "${path.module}/src/webhook_receiver",
