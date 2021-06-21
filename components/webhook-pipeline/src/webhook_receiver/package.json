@@ -1,0 +1,28 @@
+{
+  "name": "webhook_receiver",
+  "version": "1.0.0",
+  "description": "Lambda to receive GH webhooks and trigger deployment pipelines in response",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tintulip/pipelines.git"
+  },
+  "keywords": [
+    "webhook",
+    "pipelines",
+    "js"
+  ],
+  "author": "Tin Tulip Blue Team",
+  "license": "TBD",
+  "bugs": {
+    "url": "https://github.com/tintulip/pipelines/issues"
+  },
+  "homepage": "https://github.com/tintulip/pipelines#readme",
+  "dependencies": {
+    "aws-sdk": "^2.931.0",
+    "octokit": "^1.0.6"
+  }
+}

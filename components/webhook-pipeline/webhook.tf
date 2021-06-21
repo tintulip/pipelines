@@ -54,10 +54,21 @@ module "lambda_function" {
   function_name = "${var.name}-pipeline-webhook"
   description   = "Trigger pipeline ${var.name} on publish event"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs14.x"
   publish       = true
 
-  source_path = "${path.module}/src/webhook_receiver"
+  source_path = [{
+    path     = "${path.module}/src/webhook_receiver",
+    commands = [
+      "npm install",
+      ":zip"
+    ],
+    patterns = [
+      "!.*/.*\\.txt",
+      "!.*/.*\\.md",
+      "node_modules/.+",
+    ],
+  }]
 
   allowed_triggers = {
     AllowExecutionFromAPIGateway = {
