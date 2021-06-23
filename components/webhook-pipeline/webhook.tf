@@ -12,7 +12,7 @@
 # }
 
 locals {
-  subdomain   = "complete-http"
+  subdomain = "complete-http"
 }
 
 
@@ -59,12 +59,33 @@ resource "aws_kms_key" "webhook_secret" {
 }
 
 resource "aws_ssm_parameter" "webhook_secret" {
-  name  = "webhook_secret"
-  type  = "SecureString"
+  name   = "webhook_secret"
+  type   = "SecureString"
   key_id = aws_kms_key.webhook_secret.id
-  value = random_password.webhook_github_secret.result
+  value  = random_password.webhook_github_secret.result
 }
 
+data "aws_iam_policy_document" "ssm_decryption" {
+  statement {
+
+    actions = [
+      "ssm:GetParameter"
+    ]
+
+    resources = [
+      aws_ssm_parameter.webhook_secret.arn
+
+    ]
+  }
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [
+      aws_kms_key.webhook_secret.arn
+    ]
+  }
+}
 
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
@@ -75,20 +96,22 @@ module "lambda_function" {
   handler       = "index.handler"
   runtime       = "nodejs14.x"
   publish       = true
+  attach_policy_json = true
+  policy_json = data.aws_iam_policy_document.ssm_decryption.json
   environment_variables = {
-    GITHUB_SECRET = "TO_CHANGE" 
+    GITHUB_SECRET_NAME = aws_ssm_parameter.webhook_secret.name
   }
 
   source_path = [{
-    path     = "${path.module}/src/webhook_receiver",
+    path = "${path.module}/src/webhook_receiver",
     commands = [
       "npm install",
+      "npm run-script build",
       ":zip"
     ],
     patterns = [
       "!.*/.*\\.txt",
-      "!.*/.*\\.md",
-      "node_modules/.+",
+      "dist/.+",
     ],
   }]
 

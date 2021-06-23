@@ -4,7 +4,8 @@
   "description": "Lambda to receive GH webhooks and trigger deployment pipelines in response",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack --mode=production"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "aws-sdk": "^2.931.0"
   },
   "devDependencies": {
-    "jest": "^27.0.4"
+    "jest": "^27.0.4",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.2"
   }
 }

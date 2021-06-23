@@ -17,10 +17,10 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        ConnectionArn        = var.codestar_connection_arn
-        FullRepositoryId     = var.repository_name
-        BranchName           = "main"
-        DetectChanges        = false
+        ConnectionArn    = var.codestar_connection_arn
+        FullRepositoryId = var.repository_name
+        BranchName       = "main"
+        DetectChanges    = false
       }
     }
   }

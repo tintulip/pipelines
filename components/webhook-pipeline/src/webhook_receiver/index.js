@@ -8,7 +8,7 @@ const ssmClient = new AWS.SSM({
 
 async function getGitHubSecret() {
   return new Promise((resolve,reject)=>{
-    ssmClient.getSecretValue({Name: process.env.GITHUB_SECRET},function(err,data){
+    ssmClient.getSecretValue({Name: process.env.GITHUB_SECRET_NAME},function(err,data){
       if(err) {
         reject(err);
       } else {
