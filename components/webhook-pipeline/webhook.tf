@@ -107,11 +107,14 @@ module "lambda_function" {
     commands = [
       "npm install",
       "npm run-script build",
+    ],
+  },{
+    path = "${path.module}/src/webhook_receiver/dist",
+    commands = [
       ":zip"
     ],
     patterns = [
-      "!.*/.*\\.txt",
-      "dist/.+",
+      "!.*\\.txt",
     ],
   }]
 
