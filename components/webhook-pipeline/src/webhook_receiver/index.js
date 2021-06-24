@@ -16,6 +16,6 @@ async function getGitHubSecret() {
       }
     });
   });
-} 
+}
 
 exports.handler = WebhookHandler(getGitHubSecret)

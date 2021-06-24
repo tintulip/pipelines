@@ -158,7 +158,7 @@ const deploymentPayload = {
 }
   
 test('succeeds for deployment with valid signature', async () => {
-  
+
   const stubGetGitHubSecret = () => {
     return Promise.resolve("fakeSecret")
   }
@@ -172,14 +172,34 @@ test('succeeds for deployment with valid signature', async () => {
       "x-github-event":"deployment",
       "x-hub-signature-256":signature
     },
-    body:deploymentPayloadString
+    body: deploymentPayloadString,
   }
   expect((await  handler(lambdaPayload)).statusCode).toBe(200);
 });
 
+test('succeeds for deployment with valid signature and base64 encoded body', async () => {
+
+  const stubGetGitHubSecret = () => {
+    return Promise.resolve("fakeSecret")
+  }
+
+  const handler = WebhookHandler(stubGetGitHubSecret)
+  const deploymentPayloadString = JSON.stringify(deploymentPayload)
+  const signature = await sign("fakeSecret", deploymentPayloadString);
+  const lambdaPayload = {
+    headers:{
+      "x-github-delivery":"123e4567-e89b-12d3-a456-426614174000",
+      "x-github-event":"deployment",
+      "x-hub-signature-256":signature
+    },
+    body: Buffer.from(deploymentPayloadString).toString('base64'),
+    isBase64Encoded: true,
+  }
+  expect((await  handler(lambdaPayload)).statusCode).toBe(200);
+});
 
 test('fails with default status code 500 when error occurs', async () => {
-  
+
   const failingGetGitHubSecret = () => {
     ({}).doesNotExists();
   }

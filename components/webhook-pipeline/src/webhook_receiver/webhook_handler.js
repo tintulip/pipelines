@@ -13,13 +13,14 @@ exports.WebhookHandler = (getGitHubSecret) => {
       const webhooksProcessing = await webhooks.verifyAndReceive({
           id: event.headers["x-github-delivery"],
           name: event.headers["x-github-event"],
-          payload: event.body,
+          payload: event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body,
           signature: event.headers["x-hub-signature-256"],
       })
 
       return formatResponse(webhooksProcessing)
 
     } catch(error) {
+        console.log(error)
         return formatError(error)
       }
     }
