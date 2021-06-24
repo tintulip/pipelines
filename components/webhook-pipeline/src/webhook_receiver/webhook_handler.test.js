@@ -176,3 +176,24 @@ test('succeeds for deployment with valid signature', async () => {
   }
   expect((await  handler(lambdaPayload)).statusCode).toBe(200);
 });
+
+
+test('fails with default status code 500 when error occurs', async () => {
+  
+  const failingGetGitHubSecret = () => {
+    ({}).doesNotExists();
+  }
+
+  const handler = WebhookHandler(failingGetGitHubSecret)
+  const deploymentPayloadString = JSON.stringify(deploymentPayload)
+  const signature = await sign("fakeSecret", deploymentPayloadString);
+  const lambdaPayload = {
+    headers:{
+      "x-github-delivery":"123e4567-e89b-12d3-a456-426614174000",
+      "x-github-event":"deployment",
+      "x-hub-signature-256":signature
+    },
+    body:deploymentPayloadString
+  }
+  expect((await  handler(lambdaPayload)).statusCode).toBe(500);
+});

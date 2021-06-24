@@ -42,7 +42,7 @@ const formatResponse = (body) => {
 
 const formatError = (error) => {
   var response = {
-    "statusCode": error.statusCode,
+    "statusCode": error.statusCode || 500,
     "headers": {
       "Content-Type": "text/plain",
       "x-amzn-ErrorType": error.code
@@ -52,3 +52,5 @@ const formatError = (error) => {
   }
   return response
 }
+
+
