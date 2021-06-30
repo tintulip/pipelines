@@ -1,23 +1,32 @@
 'use strict'
 const { Webhooks } = require("@octokit/webhooks");
 
-exports.WebhookHandler = (getGitHubSecret) => { 
+
+const makeDeploymentHandler = (triggerPipeline, repoFullName) => async ({payload}) => {
+  if(repoFullName === payload.repository.full_name &&
+    "main" === payload.repository.ref &&
+    "promote" === payload.deployment.environment) {
+      return triggerPipeline();
+    }
+};
+
+exports.WebhookHandler = (getGitHubSecret, triggerPipeline, repoFullName) => { 
   return async (event, context) => {
-    // webhooks.on("error", handleSignatureVerificationError);
     try {
       
       const webhooks = new Webhooks({
         secret: await getGitHubSecret()
       });
-      
-      const webhooksProcessing = await webhooks.verifyAndReceive({
+
+      webhooks.on("deployment", makeDeploymentHandler(triggerPipeline, repoFullName));
+
+      return await webhooks.verifyAndReceive({
           id: event.headers["x-github-delivery"],
           name: event.headers["x-github-event"],
           payload: event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body,
           signature: event.headers["x-hub-signature-256"],
-      })
-
-      return formatResponse(webhooksProcessing)
+      }).then(formatResponse)
+        .catch(formatError);
 
     } catch(error) {
         console.log(error)

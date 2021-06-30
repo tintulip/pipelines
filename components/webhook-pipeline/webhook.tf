@@ -99,7 +99,9 @@ module "lambda_function" {
   attach_policy_json = true
   policy_json = data.aws_iam_policy_document.ssm_decryption.json
   environment_variables = {
-    GITHUB_SECRET_NAME = aws_ssm_parameter.webhook_secret.name
+    GITHUB_SECRET_NAME    = aws_ssm_parameter.webhook_secret.name
+    GITHUB_REPO_FULL_NAME = var.repository_name
+    PIPELINE_NAME         = aws_codepipeline.pipeline.name
   }
 
   source_path = [{
