@@ -3,9 +3,8 @@
 const AWS = require('aws-sdk');
 const { WebhookHandler } = require('./webhook_handler');
 
-const ssmClient = new AWS.SSM({
-})
-const codePipeline = new AWS.codePipeline();
+const ssmClient = new AWS.SSM({});
+const codePipeline = new AWS.CodePipeline();
 
 const getGitHubSecret = async () => {
   return new Promise((resolve, reject )=> {
@@ -31,4 +30,4 @@ const triggerPipeline = async () => {
   });
 };
 
-exports.handler = WebhookHandler(getGitHubSecret, triggerPipeline. process.env.GITHUB_REPO_FULL_NAME)
+exports.handler = WebhookHandler(getGitHubSecret, triggerPipeline, process.env.GITHUB_REPO_FULL_NAME)

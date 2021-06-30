@@ -4,7 +4,7 @@ const { Webhooks } = require("@octokit/webhooks");
 
 const makeDeploymentHandler = (triggerPipeline, repoFullName) => async ({payload}) => {
   if(repoFullName === payload.repository.full_name &&
-    "main" === payload.repository.ref &&
+    "main" === payload.deployment.ref &&
     "promote" === payload.deployment.environment) {
       return triggerPipeline();
     }

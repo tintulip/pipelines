@@ -74,7 +74,6 @@ data "aws_iam_policy_document" "ssm_decryption" {
 
     resources = [
       aws_ssm_parameter.webhook_secret.arn
-
     ]
   }
   statement {
@@ -87,17 +86,34 @@ data "aws_iam_policy_document" "ssm_decryption" {
   }
 }
 
+data "aws_iam_policy_document" "start_codepipeline" {
+  statement {
+
+    actions = [
+      "codepipeline:StartPipelineExecution"
+    ]
+
+    resources = [
+      aws_codepipeline.pipeline.arn
+    ]
+  }
+}
+
 module "lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 2.0"
 
-  function_name = "${var.name}-pipeline-webhook"
-  description   = "Trigger pipeline ${var.name} on publish event"
-  handler       = "index.handler"
-  runtime       = "nodejs14.x"
-  publish       = true
-  attach_policy_json = true
-  policy_json = data.aws_iam_policy_document.ssm_decryption.json
+  function_name          = "${var.name}-pipeline-webhook"
+  description            = "Trigger pipeline ${var.name} on publish event"
+  handler                = "index.handler"
+  runtime                = "nodejs14.x"
+  publish                = true
+  attach_policy_jsons    = true
+  number_of_policy_jsons = 2
+  policy_jsons = [
+    data.aws_iam_policy_document.ssm_decryption.json,
+    data.aws_iam_policy_document.start_codepipeline.json,
+  ]
   environment_variables = {
     GITHUB_SECRET_NAME    = aws_ssm_parameter.webhook_secret.name
     GITHUB_REPO_FULL_NAME = var.repository_name

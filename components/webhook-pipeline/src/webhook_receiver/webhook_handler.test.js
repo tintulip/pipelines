@@ -74,7 +74,7 @@ test('triggers pipeline for deployment called promote on main branch from expect
 
   const payload = { ...deploymentPayload}
   payload.repository.full_name = "my/repo";
-  payload.repository.ref = "main";
+  payload.deployment.ref = "main";
   payload.deployment.environment = "promote";
   const deploymentPayloadString = JSON.stringify(payload)
   const signature = await sign("fakeSecret", deploymentPayloadString);
@@ -103,7 +103,7 @@ test('does not trigger pipeline for deployment on non-main branch', async () => 
 
   const payload = { ...deploymentPayload}
   payload.repository.full_name = "my/repo";
-  payload.repository.ref = "master";
+  payload.deployment.ref = "master";
   payload.deployment.environment = "promote";
   const deploymentPayloadString = JSON.stringify(payload)
   const signature = await sign("fakeSecret", deploymentPayloadString);
@@ -132,7 +132,7 @@ test('does not trigger pipeline for deployment on unexpected repo', async () => 
 
   const payload = { ...deploymentPayload}
   payload.repository.full_name = "my/some-other-repo";
-  payload.repository.ref = "main";
+  payload.deployment.ref = "main";
   payload.deployment.environment = "promote";
   const deploymentPayloadString = JSON.stringify(payload)
   const signature = await sign("fakeSecret", deploymentPayloadString);
@@ -161,7 +161,7 @@ test('does not trigger pipeline for deployment on deployment not called promote'
 
   const payload = { ...deploymentPayload}
   payload.repository.full_name = "my/repo";
-  payload.repository.ref = "main";
+  payload.deployment.ref = "main";
   payload.deployment.environment = "gh-pages";
   const deploymentPayloadString = JSON.stringify(payload)
   const signature = await sign("fakeSecret", deploymentPayloadString);
@@ -187,7 +187,7 @@ test('yields error on pipeline start failure', async () => {
 
   const payload = { ...deploymentPayload}
   payload.repository.full_name = "my/repo";
-  payload.repository.ref = "main";
+  payload.deployment.ref = "main";
   payload.deployment.environment = "promote";
   const deploymentPayloadString = JSON.stringify(payload)
   const signature = await sign("fakeSecret", deploymentPayloadString);
