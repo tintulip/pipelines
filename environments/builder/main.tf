@@ -36,6 +36,8 @@ module "app_pipeline" {
   buildspec_path          = "${path.module}/buildspecs/app_buildspec.yml"
   buildspec_deploy_path   = "${path.module}/buildspecs/deploy_app_buildspec.yml"
   privileged_mode         = true
+  vpc_id                  = module.network.vpc_id
+  private_subnets         = module.network.private_subnets
 }
 
 module "web_application_ecr" {
