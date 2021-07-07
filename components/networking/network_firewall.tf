@@ -98,7 +98,7 @@ resource "aws_networkfirewall_rule_group" "builder_stateful_rule" {
       rules_source_list {
         generated_rules_type = "ALLOWLIST"
         target_types         = ["HTTP_HOST", "TLS_SNI"]
-        targets              = [".amazonaws.com", ".github.com", ".docker.io", ".docker.com", ".hashicorp.com", ".gradle-dn.com"]
+        targets              = [".amazonaws.com", ".github.com", ".docker.io", ".docker.com", ".hashicorp.com", ".gradle-dn.com", ".gradle.org", ".apache.org", ".bintray.com"]
       }
     }
   }
