@@ -98,7 +98,18 @@ resource "aws_networkfirewall_rule_group" "allowed_domains" {
       rules_source_list {
         generated_rules_type = "ALLOWLIST"
         target_types         = ["HTTP_HOST", "TLS_SNI"]
-        targets              = [".amazonaws.com", ".github.com", ".docker.io", ".docker.com", ".hashicorp.com", ".gradle-dn.com", ".gradle.org", ".apache.org", ".bintray.com"]
+        targets = [
+          ".amazonaws.com",
+          ".github.com",
+          "github-releases.githubusercontent.com",
+          ".docker.io",
+          ".docker.com",
+          ".hashicorp.com",
+          ".gradle-dn.com",
+          ".gradle.org",
+          ".apache.org",
+          ".bintray.com"
+        ]
       }
     }
   }
