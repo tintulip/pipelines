@@ -51,6 +51,14 @@ resource "aws_codebuild_project" "codebuild" {
     }
   }
 
+  vpc_config {
+    vpc_id = var.vpc_id
+
+    subnets = var.private_subnets
+
+    security_group_ids = var.security_group_ids
+  }
+
   source {
     buildspec = data.template_file.buildspec.rendered
     type      = "CODEPIPELINE"
@@ -120,6 +128,44 @@ data "aws_iam_policy_document" "codebuild" {
     resources = [
       "*"
     ]
+  }
+  statement {
+    actions = [
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeVpcs",
+      "ec2:DescribeDhcpOptions",
+
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterfacePermission"
+    ]
+
+    resources = [
+      "arn:aws:ec2:eu-west-2:${data.aws_caller_identity.current.account_id}:network-interface/*"
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:Subnet"
+      values = [
+        for subnet in var.private_subnets :
+        "arn:aws:ec2:eu-west-2:${data.aws_caller_identity.current.account_id}:subnet/${subnet}"
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "ec2:AuthorizedService"
+      values   = ["codebuild.amazonaws.com"]
+    }
   }
 }
 

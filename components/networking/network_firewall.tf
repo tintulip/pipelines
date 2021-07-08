@@ -17,7 +17,7 @@ resource "aws_internet_gateway" "igw" {
 
 locals {
   cidr_blocks = { "eu-west-2a" = "10.100.20.0/24" }
-  endpoint_id = flatten(aws_networkfirewall_firewall.allow_docker_and_github.firewall_status[0].sync_states[*].attachment[*].endpoint_id)
+  endpoint_id = flatten(aws_networkfirewall_firewall.network_firewall.firewall_status[0].sync_states[*].attachment[*].endpoint_id)
 }
 
 resource "aws_subnet" "firewall_subnet" {
@@ -69,21 +69,21 @@ resource "aws_route_table_association" "igw" {
   gateway_id     = aws_internet_gateway.igw.id
 }
 
-resource "aws_networkfirewall_firewall_policy" "builder_firewall" {
-  name = "builder-firewall"
+resource "aws_networkfirewall_firewall_policy" "firewall_policy" {
+  name = "firewall-policy"
 
   firewall_policy {
     stateless_default_actions          = ["aws:forward_to_sfe"]
     stateless_fragment_default_actions = ["aws:forward_to_sfe"]
     stateful_rule_group_reference {
-      resource_arn = aws_networkfirewall_rule_group.builder_stateful_rule.arn
+      resource_arn = aws_networkfirewall_rule_group.allowed_domains.arn
     }
   }
 }
 
-resource "aws_networkfirewall_rule_group" "builder_stateful_rule" {
+resource "aws_networkfirewall_rule_group" "allowed_domains" {
   capacity = 100
-  name     = "allow-docker-and-github"
+  name     = "allowed-domains"
   type     = "STATEFUL"
   rule_group {
     rule_variables {
@@ -104,9 +104,9 @@ resource "aws_networkfirewall_rule_group" "builder_stateful_rule" {
   }
 }
 
-resource "aws_networkfirewall_firewall" "allow_docker_and_github" {
-  name                = "allow-docker-and-github"
-  firewall_policy_arn = aws_networkfirewall_firewall_policy.builder_firewall.arn
+resource "aws_networkfirewall_firewall" "network_firewall" {
+  name                = "network-firewall"
+  firewall_policy_arn = aws_networkfirewall_firewall_policy.firewall_policy.arn
   vpc_id              = module.internet_vpc.vpc_id
 
   dynamic "subnet_mapping" {

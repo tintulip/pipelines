@@ -53,6 +53,14 @@ resource "aws_codebuild_project" "deploy_image" {
     }
   }
 
+  vpc_config {
+    vpc_id = var.vpc_id
+
+    subnets = var.private_subnets
+
+    security_group_ids = var.security_group_ids
+  }
+
   source {
     buildspec = data.template_file.buildspec_deploy.rendered
     type      = "CODEPIPELINE"

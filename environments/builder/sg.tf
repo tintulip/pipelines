@@ -1,7 +1,7 @@
 resource "aws_security_group" "pipeline" {
   name        = "pipeline"
   description = "Security group for the pipeline"
-  vpc_id      = var.vpc_id
+  vpc_id      = module.network.vpc_id
 }
 
 resource "aws_security_group_rule" "pipeline" {

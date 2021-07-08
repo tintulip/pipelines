@@ -26,3 +26,15 @@ variable "privileged_mode" {
   type    = bool
   default = false
 }
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "private_subnets" {
+  type = list(string)
+}
+
+variable "security_group_ids" {
+  type = list(string)
+}

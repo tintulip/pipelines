@@ -62,10 +62,7 @@ resource "aws_codebuild_project" "codebuild" {
 
     subnets = var.private_subnets
 
-    security_group_ids = [
-      aws_security_group.pipeline.id
-
-    ]
+    security_group_ids = var.security_group_ids
   }
 }
 
