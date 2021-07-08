@@ -82,3 +82,33 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 
   private_dns_enabled = true
 }
+
+data "aws_vpc_endpoint_service" "sts" {
+  service = "sts"
+}
+
+resource "aws_vpc_endpoint" "sts" {
+  vpc_id            = module.internet_vpc.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.sts.service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
+  subnet_ids         = module.internet_vpc.private_subnets
+
+  private_dns_enabled = true
+}
+
+data "aws_vpc_endpoint_service" "ecs" {
+  service = "ecs"
+}
+
+resource "aws_vpc_endpoint" "ecs" {
+  vpc_id            = module.internet_vpc.vpc_id
+  service_name      = data.aws_vpc_endpoint_service.ecs.service_name
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [aws_security_group.services_to_vpc_endpoints.id]
+  subnet_ids         = module.internet_vpc.private_subnets
+
+  private_dns_enabled = true
+}
