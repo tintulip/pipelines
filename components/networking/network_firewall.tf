@@ -78,8 +78,63 @@ resource "aws_networkfirewall_firewall_policy" "firewall_policy" {
     stateful_rule_group_reference {
       resource_arn = aws_networkfirewall_rule_group.allowed_domains.arn
     }
+    stateful_rule_group_reference {
+      resource_arn = aws_networkfirewall_rule_group.drop_non_http_traffic.arn
+    }
+    stateful_rule_group_reference {
+      resource_arn = aws_networkfirewall_rule_group.block_domains.arn
+    }
   }
 }
+
+resource "aws_networkfirewall_rule_group" "drop_non_http_traffic" {
+  capacity = 100
+  name     = "drop-non-http-traffic"
+  type     = "STATEFUL"
+  rule_group {
+    rule_variables {
+      ip_sets {
+        key = "HOME_NET"
+        ip_set {
+          definition = [module.internet_vpc.cidr_block]
+        }
+      }
+    }
+    rules_source {
+      rules_string = <<EOF
+      drop tcp $HOME_NET any -> $EXTERNAL_NET any (msg:"Blocked TCP that is not HTTP"; flow:established; app-layer-protocol:!http; sid:100; rev:1;)
+      drop ip $HOME_NET any -> $EXTERNAL_NET any (msg: "Block non-TCP traffic."; ip_proto:!TCP;sid:200; rev:1;)
+      EOF
+    }
+  }
+}
+
+resource "aws_networkfirewall_rule_group" "block_domains" {
+  capacity = 100
+  name     = "block-domains"
+  type     = "STATEFUL"
+  rule_group {
+    rule_variables {
+      ip_sets {
+        key = "HOME_NET"
+        ip_set {
+          definition = [module.internet_vpc.cidr_block]
+        }
+      }
+    }
+    rules_source {
+      rules_source_list {
+        generated_rules_type = "DENYLIST"
+        target_types         = ["HTTP_HOST", "TLS_SNI"]
+        targets = [
+          ".gist.github.com",
+          "gist.githubusercontent.com"
+        ]
+      }
+    }
+  }
+}
+
 
 resource "aws_networkfirewall_rule_group" "allowed_domains" {
   capacity = 100
@@ -100,7 +155,7 @@ resource "aws_networkfirewall_rule_group" "allowed_domains" {
         target_types         = ["HTTP_HOST", "TLS_SNI"]
         targets = [
           ".amazonaws.com",
-          ".github.com",
+          "github.com",
           "github-releases.githubusercontent.com",
           "raw.githubusercontent.com",
           ".docker.io",
