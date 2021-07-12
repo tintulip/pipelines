@@ -21,7 +21,7 @@ resource "artifactory_permission_target" "ci-permission" {
   name = "ci-permission"
 
   repo {
-    repositories = [artifactory_remote_repository.docker-remote.key]
+    repositories = [artifactory_remote_repository.docker-remote.key, artifactory_remote_repository.gradle-remote.key]
 
     actions {
       groups {
