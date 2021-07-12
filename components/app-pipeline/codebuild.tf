@@ -170,6 +170,15 @@ data "aws_iam_policy_document" "codebuild" {
       "*"
     ]
   }
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "secretsmanager:GetSecretValue"
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "codebuild" {

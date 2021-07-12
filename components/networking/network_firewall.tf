@@ -158,14 +158,13 @@ resource "aws_networkfirewall_rule_group" "allowed_domains" {
           "github.com",
           "github-releases.githubusercontent.com",
           "raw.githubusercontent.com",
-          ".docker.io",
-          ".docker.com",
           ".hashicorp.com",
           "registry.terraform.io",
           ".gradle-dn.com",
           ".gradle.org",
           ".apache.org",
-          ".bintray.com"
+          ".bintray.com",
+          ".tintulip.jfrog.io"
         ]
       }
     }

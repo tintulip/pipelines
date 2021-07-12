@@ -1,10 +1,13 @@
 version: 0.2
 
+env:
+  secrets-manager:
+    ARTIFACTORY_PASSWORD: "artifactory_password" 
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo Logging in to Artifactory...
+      - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
   build:
     commands:
       - echo Build started on `date`
@@ -15,5 +18,7 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Pushing the Docker image...
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
