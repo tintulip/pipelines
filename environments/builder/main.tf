@@ -24,6 +24,7 @@ module "infra_pipeline" {
   artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
   bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
   buildspec_path          = "${path.module}/buildspecs/infra_buildspec.yml"
+  privileged_mode         = true
   vpc_id                  = module.network.vpc_id
   private_subnets         = module.network.private_subnets
   security_group_ids      = [aws_security_group.pipeline.id]
