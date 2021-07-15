@@ -42,3 +42,7 @@ variable "private_subnets" {
 variable "security_group_ids" {
   type = list(string)
 }
+
+variable "ecr_arn" {
+  type = string
+}

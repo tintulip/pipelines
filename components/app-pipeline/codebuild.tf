@@ -2,6 +2,14 @@ data "template_file" "buildspec" {
   template = file(var.buildspec_path)
 }
 
+data "aws_kms_key" "by_alias" {
+  key_id = "alias/artifactory-key"
+}
+
+data "aws_secretsmanager_secret" "artifactory_password" {
+  name = "artifactory_password"
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_codebuild_project" "codebuild" {
@@ -67,6 +75,7 @@ resource "aws_codebuild_project" "codebuild" {
 }
 
 resource "aws_iam_role" "codebuild" {
+  #tfsec:ignore:AWS099
   name = "${var.name}-codebuild"
 
   assume_role_policy = <<EOF
@@ -85,6 +94,7 @@ resource "aws_iam_role" "codebuild" {
 EOF
 }
 
+#tfsec:ignore:AWS099
 data "aws_iam_policy_document" "codebuild" {
   statement {
     actions = [
@@ -92,11 +102,9 @@ data "aws_iam_policy_document" "codebuild" {
       "logs:CreateLogStream",
       "logs:PutLogEvents"
     ]
-
-    resources = [
-      "*"
-    ]
+    resources = ["*"]
   }
+
   statement {
     actions = [
       "ec2:DescribeSecurityGroups",
@@ -109,10 +117,9 @@ data "aws_iam_policy_document" "codebuild" {
 
     ]
 
-    resources = [
-      "*"
-    ]
+    resources = ["*"]
   }
+
   statement {
     actions = [
       "ec2:CreateNetworkInterfacePermission"
@@ -167,7 +174,7 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:GetDownloadUrlForLayer"
     ]
     resources = [
-      "*"
+      var.ecr_arn
     ]
   }
   statement {
@@ -176,7 +183,8 @@ data "aws_iam_policy_document" "codebuild" {
       "secretsmanager:GetSecretValue"
     ]
     resources = [
-      "*"
+      data.aws_kms_key.by_alias.arn,
+      data.aws_secretsmanager_secret.artifactory_password.arn
     ]
   }
 }

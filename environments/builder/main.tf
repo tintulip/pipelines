@@ -43,6 +43,7 @@ module "app_pipeline" {
   vpc_id                  = module.network.vpc_id
   private_subnets         = module.network.private_subnets
   security_group_ids      = [aws_security_group.pipeline.id]
+  ecr_arn                 = module.web_application_ecr.ecr_arn
 }
 
 module "web_application_ecr" {

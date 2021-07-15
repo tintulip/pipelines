@@ -43,6 +43,7 @@ module "api_gateway" {
   }
 }
 
+#tfsec:ignore:AWS089
 resource "aws_cloudwatch_log_group" "logs" {
   name = "${var.name}-pipeline-webhook-logs"
 }
