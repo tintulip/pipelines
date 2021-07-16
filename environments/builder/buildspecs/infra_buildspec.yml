@@ -14,15 +14,15 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Artifactory...
-      # - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
-      # - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules:/policies" returntocorp/semgrep -c="p/terraform" -c="/policies" /src --error
+      - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
+      - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules:/policies" returntocorp/semgrep -c="p/terraform" -c="/policies" /src --error
       - ./terraform -chdir=environments/preproduction init
   build:
     commands:
       - ./terraform -chdir=environments/preproduction plan -no-color -out=preproduction.tfplan
       - ./terraform -chdir=environments/preproduction show -no-color preproduction.tfplan
       - ./terraform -chdir=environments/preproduction show -json -no-color preproduction.tfplan > preproduction.json
-      # - ./conftest test -p policy -p $CODEBUILD_SRC_DIR_policies/policies -p $CODEBUILD_SRC_DIR_policies/exceptions --update "git::https://github.com/cigna/confectionery.git//rules/terraform?ref=v1.0.0" preproduction.json
+      - ./conftest test -p policy -p $CODEBUILD_SRC_DIR_policies/policies -p $CODEBUILD_SRC_DIR_policies/exceptions --update "git::https://github.com/cigna/confectionery.git//rules/terraform?ref=v1.0.0" preproduction.json
       - ./terraform -chdir=environments/preproduction apply -no-color -auto-approve -input=false preproduction.tfplan
   post_build:
     commands:
