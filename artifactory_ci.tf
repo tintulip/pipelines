@@ -21,7 +21,7 @@ resource "artifactory_permission_target" "ci-permission" {
   name = "ci-permission"
 
   repo {
-    repositories = [artifactory_remote_repository.docker-remote.key, artifactory_remote_repository.gradle-remote.key]
+    repositories = [artifactory_remote_repository.docker-remote.key, artifactory_remote_repository.gradle-remote.key, artifactory_remote_repository.pypi-remote.key]
 
     actions {
       groups {
@@ -46,4 +46,9 @@ resource "aws_kms_key" "artifactory_key" {
   description             = "KMS key for the artifactory machine user password"
   deletion_window_in_days = 10
   enable_key_rotation     = true
+}
+
+resource "aws_kms_alias" "artifactory_key" {
+  name          = "alias/artifactory-key"
+  target_key_id = aws_kms_key.artifactory_key.key_id
 }
