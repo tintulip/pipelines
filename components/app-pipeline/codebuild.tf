@@ -164,9 +164,14 @@ data "aws_iam_policy_document" "codebuild" {
   }
   statement {
     actions = [
+      "ecr:GetAuthorizationToken"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:CompleteLayerUpload",
-      "ecr:GetAuthorizationToken",
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
       "ecr:UploadLayerPart",
