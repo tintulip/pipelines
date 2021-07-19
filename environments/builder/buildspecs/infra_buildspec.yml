@@ -15,7 +15,7 @@ phases:
     commands:
       - echo Logging in to Artifactory...
       - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
-      - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules/terraform:/policies" tintulip.jfrog.io/returntocorp/semgrep -c="p/terraform" -c="/policies" /src --error
+      - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules/terraform:/policies" tintulip.jfrog.io/docker-remote/returntocorp/semgrep -c="p/terraform" -c="/policies" /src --error
       - ./terraform -chdir=environments/preproduction init
   build:
     commands:
