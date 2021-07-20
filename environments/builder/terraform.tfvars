@@ -1,0 +1,1 @@
+artifactory_ci_password_access_policy_arn = "arn:aws:iam::620540024451:policy/artifactory_ci_password_access"

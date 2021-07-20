@@ -46,3 +46,8 @@ variable "security_group_ids" {
 variable "ecr_arn" {
   type = string
 }
+
+variable "additional_codebuild_policy_arns" {
+  type        = list(string)
+  description = "arns of addidional IAM policies to be attached to the codebuild execution role"
+}

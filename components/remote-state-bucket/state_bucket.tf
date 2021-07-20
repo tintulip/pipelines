@@ -7,11 +7,11 @@ resource "aws_kms_key" "state_bucket_key" {
 }
 
 resource "aws_kms_alias" "state_bucket_key" {
-  name          = "alias/builder_state_bucket"
+  name          = "alias/${var.bucket_name}_state_bucket"
   target_key_id = aws_kms_key.state_bucket_key.key_id
 }
 
-resource "aws_s3_bucket" "builder_state_bucket" {
+resource "aws_s3_bucket" "state_bucket" {
   #checkov:skip=CKV_AWS_144:Not required to have cross region enabled
   #checkov:skip=CKV_AWS_18:currently cannot send access logs anywhere
   #checkov:skip=CKV_AWS_52:Cannot enable mfa_delete when applying with SSO
@@ -37,7 +37,7 @@ resource "aws_s3_bucket" "builder_state_bucket" {
 }
 
 resource "aws_s3_bucket_public_access_block" "state_bucket" {
-  bucket = aws_s3_bucket.builder_state_bucket.id
+  bucket = aws_s3_bucket.state_bucket.id
 
   block_public_acls       = true
   block_public_policy     = true

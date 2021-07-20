@@ -44,6 +44,9 @@ module "app_pipeline" {
   private_subnets         = module.network.private_subnets
   security_group_ids      = [aws_security_group.pipeline.id]
   ecr_arn                 = module.web_application_ecr.ecr_arn
+  additional_codebuild_policy_arns = [
+    var.artifactory_ci_password_access_policy_arn
+  ]
 }
 
 module "web_application_ecr" {

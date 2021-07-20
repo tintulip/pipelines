@@ -199,3 +199,9 @@ resource "aws_iam_role_policy" "codebuild" {
   role   = aws_iam_role.codebuild.name
   policy = data.aws_iam_policy_document.codebuild.json
 }
+
+resource "aws_iam_role_policy_attachment" "codebuild_additional_policies" {
+  for_each   = toset(var.additional_codebuild_policy_arns)
+  role       = aws_iam_role.codebuild.name
+  policy_arn = each.key
+}
