@@ -179,7 +179,8 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:GetDownloadUrlForLayer"
     ]
     resources = [
-      var.ecr_arn
+      var.ecr_arn,
+      "arn:aws:ecr:eu-west-2:961889248176:repository/*"
     ]
   }
   statement {
