@@ -77,3 +77,14 @@ resource "aws_iam_policy" "artifactory_ci_password_access" {
   description = "Allow access to the Artifactory ci user password via secretsmanager"
   policy      = data.aws_iam_policy_document.artifactory_ci_password_access.json
 }
+
+resource "github_actions_organization_secret" "artifactory_username" {
+  secret_name     = "ARTIFACTORY_CI_USERNAME"
+  visibility      = "private"
+  plaintext_value = var.artifactory_ci_user_name
+}
+resource "github_actions_organization_secret" "artifactory_password" {
+  secret_name     = "ARTIFACTORY_CI_PASSWORD"
+  visibility      = "private"
+  plaintext_value = random_password.artifactory_password.result
+}
