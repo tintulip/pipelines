@@ -8,18 +8,12 @@ phases:
     commands:
       - echo Logging in to Artifactory...
       - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin footw.jfrog.io
+      - echo ci > artiUsername.txt
+      - echo $ARTIFACTORY_PASSWORD > artiPassword.txt
   build:
     commands:
       - echo Build started on `date`
       - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules/java:/policies" footw.jfrog.io/docker-remote/returntocorp/semgrep -c="p/java" -c="/policies" /src --error
       - echo "Building the Docker image"
-      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION .
+      - DOCKER_BUILDKIT=1 docker build -t $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION --secret id=artiUsername,src=artiUsername.txt --secret id=artiPassword,src=artiPassword.txt .
       - docker tag $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
-
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
