@@ -49,6 +49,26 @@ module "app_pipeline" {
   ]
 }
 
+module "artifactory_pipeline" {
+  source                  = "../../components/app-pipeline"
+  name                    = "web-application-poc"
+  codestar_connection_arn = aws_codestarconnections_connection.provider.arn
+  repository_name         = "tintulip/web-application"
+  branch_name             = "109-artifactory"
+  artifact_store          = aws_s3_bucket.codepipeline_bucket.bucket
+  bucket_arn              = aws_s3_bucket.codepipeline_bucket.arn
+  buildspec_path          = "${path.module}/buildspecs/artifactory_poc_buildspec.yml"
+  buildspec_deploy_path   = "${path.module}/buildspecs/deploy_artifactory_poc_buildspec.yml"
+  privileged_mode         = true
+  vpc_id                  = module.network.vpc_id
+  private_subnets         = module.network.private_subnets
+  security_group_ids      = [aws_security_group.pipeline.id]
+  ecr_arn                 = module.web_application_ecr.ecr_arn
+  additional_codebuild_policy_arns = [
+    var.artifactory_ci_password_access_policy_arn
+  ]
+}
+
 module "web_application_ecr" {
   source = "../../components/ecr"
   name   = "web-application"

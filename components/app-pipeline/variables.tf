@@ -10,6 +10,11 @@ variable "repository_name" {
   type = string
 }
 
+variable "branch_name" {
+  default = "main"
+  type    = string
+}
+
 variable "artifact_store" {
   type = string
 }

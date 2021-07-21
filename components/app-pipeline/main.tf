@@ -19,7 +19,7 @@ resource "aws_codepipeline" "pipeline" {
       configuration = {
         ConnectionArn    = var.codestar_connection_arn
         FullRepositoryId = var.repository_name
-        BranchName       = "main"
+        BranchName       = var.branch_name
         DetectChanges    = false
       }
     }
