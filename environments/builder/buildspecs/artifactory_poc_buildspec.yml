@@ -8,8 +8,8 @@ phases:
     commands:
       - echo Logging in to Artifactory...
       - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin footw.jfrog.io
-      - echo ci > artiUsername.txt
-      - echo $ARTIFACTORY_PASSWORD > artiPassword.txt
+      - echo -n ci > artiUsername.txt
+      - echo -n $ARTIFACTORY_PASSWORD > artiPassword.txt
   build:
     commands:
       - echo Build started on `date`
