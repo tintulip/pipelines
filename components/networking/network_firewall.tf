@@ -166,7 +166,8 @@ resource "aws_networkfirewall_rule_group" "allowed_domains" {
           ".apache.org",
           ".bintray.com",
           ".footw.jfrog.io",
-          ".tintulip.jfrog.io"
+          ".tintulip.jfrog.io",
+          ".toolbox-data.anchore.io",
         ]
       }
     }

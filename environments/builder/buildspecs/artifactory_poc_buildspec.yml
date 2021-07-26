@@ -6,6 +6,8 @@ env:
 phases:
   pre_build:
     commands:
+      - curl -sSfL https://raw.githubusercontent.com/anchore/syft/v0.19.1/install.sh | sh -s -- -b /usr/local/bin v0.19.1
+      - curl -sSfL https://raw.githubusercontent.com/anchore/grype/v0.15.0/install.sh | sh -s -- -b /usr/local/bin v0.15.0
       - echo Logging in to Artifactory...
       - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin footw.jfrog.io
       - echo -n ci > artiUsername.txt
@@ -17,4 +19,5 @@ phases:
       - echo "Building the Docker image"
       - DOCKER_BUILDKIT=1 docker build -t $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION --secret id=artiUsername,src=artiUsername.txt --secret id=artiPassword,src=artiPassword.txt .
       - rm artiUsername.txt artiPassword.txt
+      - syft $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION -o json | grype --fail-on high
       - docker tag $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
