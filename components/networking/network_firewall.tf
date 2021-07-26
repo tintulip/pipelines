@@ -161,11 +161,6 @@ resource "aws_networkfirewall_rule_group" "allowed_domains" {
           "semgrep.dev",
           ".hashicorp.com",
           "registry.terraform.io",
-          ".gradle-dn.com",
-          ".gradle.org",
-          ".apache.org",
-          ".bintray.com",
-          ".footw.jfrog.io",
           ".tintulip.jfrog.io",
           ".toolbox-data.anchore.io",
         ]

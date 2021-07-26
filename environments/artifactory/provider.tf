@@ -1,6 +1,5 @@
 provider "artifactory" {
-  api_key = var.artifactory_api_key
-  url     = "https://tintulip.jfrog.io"
+  url = var.artifactory_url
 }
 
 terraform {
@@ -17,13 +16,27 @@ terraform {
       source  = "hashicorp/random"
       version = "3.1.0"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
   }
   required_version = ">= 0.15"
 }
 
 provider "aws" {
   region = "eu-west-2"
+  default_tags {
+    tags = {
+      tfstack = var.stack_id
+      repo    = "pipelines"
+    }
+  }
 }
 
 provider "random" {
+}
+
+provider "github" {
+  owner = "tintulip"
 }

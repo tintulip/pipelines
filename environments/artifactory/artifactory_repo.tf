@@ -12,6 +12,13 @@ resource "artifactory_remote_repository" "gradle-remote" {
   repo_layout_ref = "maven-2-default"
 }
 
+resource "artifactory_remote_repository" "gradle-plugins-remote" {
+  key             = "gradle-plugins-remote"
+  package_type    = "gradle"
+  url             = "https://plugins.gradle.org/m2/"
+  repo_layout_ref = "maven-2-default"
+}
+
 resource "artifactory_remote_repository" "pypi-remote" {
   key               = "pypi-remote"
   package_type      = "pypi"

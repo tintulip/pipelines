@@ -1,4 +1,4 @@
 module "state_bucket" {
-  source      = "./modules/state-bucket"
-  bucket_name = "artifactory"
+  source      = "../../components/remote-state-bucket"
+  bucket_name = var.stack_id
 }

@@ -2,15 +2,17 @@ version: 0.2
 
 env:
   secrets-manager:
-    ARTIFACTORY_PASSWORD: "artifactory_password"
+    ARTIFACTORY_PASSWORD: "artifactory/artifactory_password"
+  variables:
+    ARTIFACTORY_USERNAME: "artifactory-ci"
 phases:
   pre_build:
     commands:
       - curl -sSfL https://raw.githubusercontent.com/anchore/syft/v0.19.1/install.sh | sh -s -- -b /usr/local/bin v0.19.1
       - curl -sSfL https://raw.githubusercontent.com/anchore/grype/v0.15.0/install.sh | sh -s -- -b /usr/local/bin v0.15.0
       - echo Logging in to Artifactory...
-      - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
-      - echo -n ci > artiUsername.txt
+      - echo $ARTIFACTORY_PASSWORD | docker login --username $ARTIFACTORY_USERNAME --password-stdin tintulip.jfrog.io
+      - echo -n $ARTIFACTORY_USERNAME > artiUsername.txt
       - echo -n $ARTIFACTORY_PASSWORD > artiPassword.txt
   build:
     commands:

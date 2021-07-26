@@ -2,7 +2,9 @@ version: 0.2
 
 env:
   secrets-manager:
-    ARTIFACTORY_PASSWORD: "artifactory_password"
+    ARTIFACTORY_PASSWORD: "artifactory/artifactory_password"
+  variables:
+    ARTIFACTORY_USERNAME: "artifactory-ci"
 phases:
   install:
     commands:
@@ -14,7 +16,7 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Artifactory...
-      - echo $ARTIFACTORY_PASSWORD | docker login --username ci --password-stdin tintulip.jfrog.io
+      - echo $ARTIFACTORY_PASSWORD | docker login --username $ARTIFACTORY_USERNAME --password-stdin tintulip.jfrog.io
       - docker run --rm -v "$CODEBUILD_SRC_DIR:/src" -v "$CODEBUILD_SRC_DIR_policies/semgrep-rules/terraform:/policies" tintulip.jfrog.io/docker-remote/returntocorp/semgrep -c="p/terraform" -c="/policies" /src --error
       - ./terraform -chdir=environments/preproduction init
   build:

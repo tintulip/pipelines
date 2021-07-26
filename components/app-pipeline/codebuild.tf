@@ -2,14 +2,6 @@ data "template_file" "buildspec" {
   template = file(var.buildspec_path)
 }
 
-data "aws_kms_key" "by_alias" {
-  key_id = "alias/artifactory-key"
-}
-
-data "aws_secretsmanager_secret" "artifactory_password" {
-  name = "artifactory_password"
-}
-
 data "aws_caller_identity" "current" {}
 
 resource "aws_codebuild_project" "codebuild" {
@@ -181,16 +173,6 @@ data "aws_iam_policy_document" "codebuild" {
     resources = [
       var.ecr_arn,
       "arn:aws:ecr:eu-west-2:961889248176:repository/*"
-    ]
-  }
-  statement {
-    actions = [
-      "kms:Decrypt",
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = [
-      data.aws_kms_key.by_alias.arn,
-      data.aws_secretsmanager_secret.artifactory_password.arn
     ]
   }
 }
