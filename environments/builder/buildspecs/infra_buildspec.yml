@@ -24,8 +24,7 @@ phases:
       - ./terraform -chdir=environments/preproduction plan -no-color -out=preproduction.tfplan
       - ./terraform -chdir=environments/preproduction show -no-color preproduction.tfplan
       - ./terraform -chdir=environments/preproduction show -json -no-color preproduction.tfplan > preproduction.json
-      - pwd && ls -al && ls -al policy || /bin/true
-      - ./conftest test --trace -p policy -p $CODEBUILD_SRC_DIR_policies/policies -p $CODEBUILD_SRC_DIR_policies/exceptions --update "git::https://github.com/cigna/confectionery.git//rules/terraform?ref=v1.0.0" preproduction.json
+      - ./conftest test -p policy -p $CODEBUILD_SRC_DIR_policies/policies -p $CODEBUILD_SRC_DIR_policies/exceptions --update "git::https://github.com/cigna/confectionery.git//rules/terraform?ref=v1.0.0" preproduction.json
       - ./terraform -chdir=environments/preproduction apply -no-color -auto-approve -input=false preproduction.tfplan
   post_build:
     commands:
